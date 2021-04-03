@@ -140,13 +140,13 @@ class BetaVAE(BaseVAE):
         kld_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim=1), dim=0)
 
         if self.loss_type == 'H':
-            loss = recons_loss + self.beta * kld_weight * kld_loss
+            loss = recons_loss + self.beta / kld_weight * kld_loss
         elif self.loss_type == 'B':   # set beta large first (if beta is large, the recons_loss will be largetoo.
                                       # and then slowly reduce it. Introduce value C to control the beta and slowly
                                       # increase C.
             self.C_max = self.C_max.to(input.device)
             C = torch.clamp(self.C_max / self.C_stop_iter * self.num_iter, 0, self.C_max.data[0])
-            loss = recons_loss + self.gamma * kld_weight * (kld_loss - C).abs()
+            loss = recons_loss + self.gamma / kld_weight * (kld_loss - C).abs()
         else:
             raise ValueError('Undefined loss type')
 
