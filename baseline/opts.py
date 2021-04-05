@@ -20,7 +20,7 @@ def get_opts():
     parser.add_argument('--gamma', type=float, default=1000.0, help='gamma value for modified beta-vae')
     parser.add_argument('--max_capacity', type=int, default=25)
     parser.add_argument('--Capacity_max_iter', type=int, default=1e5)
-    parser.add_argument('--loss_type', type=str, default='B')
+    parser.add_argument('--loss_type', type=str, default='H')
     parser.add_argument('--hidden_dims', type=list, default=[32, 64, 128, 256, 512])
 
     opts = parser.parse_args()
