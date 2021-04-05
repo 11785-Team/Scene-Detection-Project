@@ -40,13 +40,13 @@ class BetaVAE(BaseVAE):
             in_channels = h_dim
 
         self.encoder = nn.Sequential(*modules)
-        self.fc_mu = nn.Linear(hidden_dims[-1] * 4, latent_dim)
-        self.fc_var = nn.Linear(hidden_dims[-1] * 4, latent_dim)
+        self.fc_mu = nn.Linear(hidden_dims[-1] * 49, latent_dim)
+        self.fc_var = nn.Linear(hidden_dims[-1] * 49, latent_dim)
 
         # Build Decoder
         modules = []
 
-        self.decoder_input = nn.Linear(latent_dim, hidden_dims[-1] * 4)
+        self.decoder_input = nn.Linear(latent_dim, hidden_dims[-1] * 49)
 
         hidden_dims.reverse()
 
@@ -97,7 +97,7 @@ class BetaVAE(BaseVAE):
 
     def decode(self, z):
         result = self.decoder_input(z)
-        result = result.view(-1, 512, 2, 2)  # ??? how to get 2, 2, is it the down-sampled image size
+        result = result.view(-1, 512, 7, 7)  # ??? how to get 2, 2, is it the down-sampled image size
         result = self.decoder(result)
         result = self.final_layer(result)
 
@@ -126,12 +126,12 @@ class BetaVAE(BaseVAE):
     def loss_function(self, *args, **kwargs):
         self.num_iter += 1
         recons = args[0][0]
-        input = args[0][1]
+        input_ = args[0][1]
         mu = args[0][2]
         log_var = args[0][3]
         kld_weight = kwargs['M_N']  # Account for the minibatch from the data
 
-        recons_loss = F.mse_loss(recons, input)   # reconstruction error, straightforward
+        recons_loss = F.mse_loss(recons, input_)   # reconstruction error, straightforward
 
 
         # KL Divergence: Lb = Eq(z|x)[logP(x|z)] - Dkl(q(z|x) || p(z))
@@ -149,7 +149,6 @@ class BetaVAE(BaseVAE):
             loss = recons_loss + self.gamma / kld_weight * (kld_loss - C).abs()
         else:
             raise ValueError('Undefined loss type')
-
         return {'loss': loss, "Reconstruction_loss": recons_loss, "KLD": kld_loss}
 
     def sample(self, num_samples, current_device, **kwargs):

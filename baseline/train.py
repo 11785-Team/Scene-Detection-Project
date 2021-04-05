@@ -35,6 +35,7 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
             output = Model.forward(imgs)
 
             loss_tmp = Model.loss_function(output, M_N=batch_size)['loss']
+            
             loss += loss_tmp.item()
 
             loss_tmp.backward()
@@ -42,6 +43,9 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
             # compute the number of batch
             batch_num += 1
             print(loss_tmp.item())
+            torch.cuda.empty_cache()
+            del imgs
+
         print('Train: #{} epoch, the loss is'.format(iter), loss / batch_num)
         train_loss.append(loss / batch_num)
 
@@ -55,6 +59,9 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
                 output = Model.forward(imgs)
                 loss_val += Model.loss_function(output, M_N=batch_size)['loss'].item()
                 batch_num += 1
+                torch.cuda.empty_cache()
+                del imgs
+
         print('Val: #{} epoch, the loss is'.format(iter), loss_val / batch_num)
         val_loss.append(loss_val / batch_num)
     return Model.state_dict(), train_loss, val_loss
