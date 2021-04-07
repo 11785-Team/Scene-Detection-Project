@@ -21,7 +21,7 @@ def get_opts():
     parser.add_argument('--max_capacity', type=int, default=25)
     parser.add_argument('--Capacity_max_iter', type=int, default=1e5)
     parser.add_argument('--loss_type', type=str, default='H')
-    parser.add_argument('--hidden_dims', type=list, default=[32, 64, 128, 256, 512])
+    parser.add_argument('--hidden_dims', type=list, default=[64, 128, 128, 256, 512, 512, 1024, 1024])
 
     opts = parser.parse_args()
 

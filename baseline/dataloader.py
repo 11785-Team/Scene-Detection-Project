@@ -14,6 +14,8 @@ def save2csv(path, csvname='anime_data.csv'):
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('frame_')[1].split('.jpeg')[0]))
     # save img to csv
+    if os.path.exists(csvname):
+        os.remove(csvname) # delete file if exists
     f = open(csvname, 'a', newline='')
     for filename in path_list:
         writer = csv.writer(f)
@@ -24,7 +26,7 @@ def save2csv(path, csvname='anime_data.csv'):
 # Image normalization and data augmentation
 normalize = T.Normalize(mean=[0.485, 0.456, 0.406],
                     std=[0.229, 0.224, 0.225])
-transform_init = T.Compose([T.ToTensor(), normalize, T.Resize((224, 224))])
+transform_init = T.Compose([T.ToTensor(), normalize, T.Resize((64, 64))])
 
 # Define Dataset
 # Maybe we can use ImageFolder and it will be faster than using Image to read imgs every time
