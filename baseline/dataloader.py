@@ -26,7 +26,7 @@ def save2csv(path, csvname='anime_data.csv'):
 # Image normalization and data augmentation
 normalize = T.Normalize(mean=[0.485, 0.456, 0.406],
                     std=[0.229, 0.224, 0.225])
-transform_init = T.Compose([T.ToTensor(), normalize, T.Resize((64, 64))])
+transform_init = T.Compose([T.ToTensor(), normalize, T.Resize((128, 128))])
 
 # Define Dataset
 # Maybe we can use ImageFolder and it will be faster than using Image to read imgs every time

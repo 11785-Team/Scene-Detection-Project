@@ -21,6 +21,7 @@ def main():
     # Can add some transform here
 
     # Define beta-vae net
+    print('latent dim:', opts.latent_dim)
     Model = BetaVAE(in_channels=3, latent_dim=opts.latent_dim, hidden_dims=opts.hidden_dims, beta=opts.beta,
         gamma=opts.gamma, max_capacity=opts.max_capacity, Capacity_max_iter=opts.Capacity_max_iter, loss_type=opts.loss_type)
 
@@ -35,6 +36,8 @@ def main():
     train_loss_sum, val_loss_sum = 0, 0
     model_state = None
     print("Start Training!!!!!!!")
+
+
     for train_index, val_index in kf.split(dataset):
         train_dataset = data.Subset(dataset, train_index)
         val_dataset = data.Subset(dataset, val_index)
@@ -52,9 +55,9 @@ def main():
     
     torch.save(model_state, 'model_state.pkl')
     # use trained model to get the latent code of each frame
-    latent = generate_code(Model, model_state, dataset, opts.latent_dim)
+    # latent = generate_code(Model, model_state, dataset, opts.latent_dim)
     # save latent
-    np.save('latent.npy', latent)
+    # np.save('latent.npy', latent)
     
     # define the distance metric for latent space
     metric = torch.nn.CrossEntropyLoss

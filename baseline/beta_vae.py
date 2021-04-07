@@ -26,67 +26,46 @@ class BetaVAE(BaseVAE):
 
         modules = []
         # if hidden_dims is None:
-        hidden_dims = [64, 128, 256, 512, 1024] # overwrite hidden dims here for easier implementation
+        hidden_dims = [32, 32, 64, 128, 256] # overwrite hidden dims here for easier implementation
 
         # Build Encoder
         for h_dim in hidden_dims:
             print(in_channels, h_dim)
-            if h_dim == 1024:
-                modules.append(
-                    nn.Sequential(
-                        nn.Conv2d(in_channels, out_channels=h_dim,
-                                kernel_size=4, stride=1, padding=0),
-                        nn.BatchNorm2d(h_dim),
-                        nn.LeakyReLU())
-                )
-            else:
-                modules.append(
-                    nn.Sequential(
-                        nn.Conv2d(in_channels, out_channels=h_dim,
-                                kernel_size=4, stride=2, padding=1),
-                        nn.BatchNorm2d(h_dim),
-                        nn.LeakyReLU())
-                )
+            modules.append(
+                nn.Sequential(
+                    nn.Conv2d(in_channels, out_channels=h_dim,
+                            kernel_size=3, stride=2, padding=1),
+                    nn.BatchNorm2d(h_dim),
+                    nn.ReLU())
+            )
             in_channels = h_dim
 
 
         self.encoder = nn.Sequential(*modules)
-        self.fc_mu = nn.Linear(hidden_dims[-1] * 1, latent_dim)
-        self.fc_var = nn.Linear(hidden_dims[-1] * 1, latent_dim)
+        self.fc_mu = nn.Linear(hidden_dims[-1] * 16, latent_dim)
+        self.fc_var = nn.Linear(hidden_dims[-1] * 16, latent_dim)
 
         # Build Decoder
         modules = []
 
-        self.decoder_input = nn.Linear(latent_dim, hidden_dims[-1] * 1)
+        self.decoder_input = nn.Linear(latent_dim, hidden_dims[-1] * 16)
 
         hidden_dims.reverse()
 
         for i in range(len(hidden_dims) - 1):
             print(hidden_dims[i], hidden_dims[i+1])
-            if i == 0:
-                modules.append(
-                    nn.Sequential(
-                        nn.ConvTranspose2d(hidden_dims[i],
-                                        hidden_dims[i + 1],
-                                        kernel_size=4,
-                                        stride=1,
-                                        padding=0,
-                                        output_padding=0),
-                        nn.BatchNorm2d(hidden_dims[i+1]),
-                        nn.LeakyReLU())
-                )
-            else:
-                modules.append(
-                    nn.Sequential(
-                        nn.ConvTranspose2d(hidden_dims[i],
-                                        hidden_dims[i + 1],
-                                        kernel_size=4,
-                                        stride=2,
-                                        padding=1,
-                                        output_padding=0),
-                        nn.BatchNorm2d(hidden_dims[i+1]),
-                        nn.LeakyReLU())
-                )
+            modules.append(
+                nn.Sequential(
+                    nn.ConvTranspose2d(hidden_dims[i],
+                                    hidden_dims[i + 1],
+                                    kernel_size=3,
+                                    stride=2,
+                                    padding=1,
+                                    output_padding=1),
+                    nn.BatchNorm2d(hidden_dims[i+1]),
+                    nn.ReLU())
+            )
+          
 
 
         self.decoder = nn.Sequential(*modules)
@@ -123,7 +102,7 @@ class BetaVAE(BaseVAE):
 
     def decode(self, z):
         result = self.decoder_input(z)
-        result = result.view(-1, 1024, 1, 1)  # ??? how to get 2, 2, is it the down-sampled image size
+        result = result.view(-1, 256, 4, 4)  # ??? how to get 2, 2, is it the down-sampled image size
         result = self.decoder(result)
         result = self.final_layer(result)
 

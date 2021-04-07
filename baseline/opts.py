@@ -3,7 +3,7 @@ import argparse
 def get_opts():
     parser = argparse.ArgumentParser(description='11785_Project')
 
-    parser.add_argument('--max_iters', type=int, default=30, help='the number of epochs for training')
+    parser.add_argument('--max_iters', type=int, default=100, help='the number of epochs for training')
 
     # hyperparameters for optimizer
     parser.add_argument('--lr', type=float, default=0.1, help='the learning rate for training')

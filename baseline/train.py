@@ -6,7 +6,7 @@ import os
 
 def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay, m,):
 
-    model_output_folder = '/content/gdrive/MyDrive/models_4_7/'
+    model_output_folder = '/content/gdrive/MyDrive/models_4_7_sleep/'
     if not os.path.exists(model_output_folder):
         os.mkdir(model_output_folder)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -21,7 +21,8 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
     Model.to(device)
 
     # Optimzier
-    optimizer = optim.SGD(Model.parameters(), lr=lr, weight_decay=w_decay, momentum=m)
+    # optimizer = optim.SGD(Model.parameters(), lr=lr, weight_decay=w_decay, momentum=m)
+    optimizer = optim.Adam(Model.parameters(), lr=lr, weight_decay=w_decay)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.3, patience=3, verbose=True)
     # save training loss and validation loss for KFold
     train_loss = []
