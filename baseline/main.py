@@ -25,7 +25,7 @@ def main():
     Model = BetaVAE(in_channels=3, latent_dim=opts.latent_dim, hidden_dims=opts.hidden_dims, beta=opts.beta,
         gamma=opts.gamma, max_capacity=opts.max_capacity, Capacity_max_iter=opts.Capacity_max_iter, loss_type=opts.loss_type)
 
-    # model_state_path = '/content/gdrive/MyDrive/models/model_state_11_val_loss_0.6436101158459981.pkl'
+    # model_state_path = '/content/gdrive/MyDrive/models_baseline_beta_1/model_state_4_val_loss_443.9217264811198.pkl'
     # Model.load_state_dict(torch.load(model_state_path))
     # print("continue training with " + model_state_path)
 

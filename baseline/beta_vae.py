@@ -26,7 +26,7 @@ class BetaVAE(BaseVAE):
 
         modules = []
         # if hidden_dims is None:
-        hidden_dims = [32, 32, 64, 128, 256] # overwrite hidden dims here for easier implementation
+        hidden_dims = [32, 64, 128, 256] # overwrite hidden dims here for easier implementation
 
         # Build Encoder
         for h_dim in hidden_dims:
@@ -35,7 +35,7 @@ class BetaVAE(BaseVAE):
                 nn.Sequential(
                     nn.Conv2d(in_channels, out_channels=h_dim,
                             kernel_size=3, stride=2, padding=1),
-                    nn.BatchNorm2d(h_dim),
+                    # nn.BatchNorm2d(h_dim),
                     nn.ReLU())
             )
             in_channels = h_dim
@@ -62,7 +62,7 @@ class BetaVAE(BaseVAE):
                                     stride=2,
                                     padding=1,
                                     output_padding=1),
-                    nn.BatchNorm2d(hidden_dims[i+1]),
+                    # nn.BatchNorm2d(hidden_dims[i+1]),
                     nn.ReLU())
             )
           
@@ -77,7 +77,7 @@ class BetaVAE(BaseVAE):
                                    stride=2,
                                    padding=1,
                                    output_padding=1),
-                nn.BatchNorm2d(hidden_dims[-1]),
+                # nn.BatchNorm2d(hidden_dims[-1]),
                 nn.LeakyReLU(),
                 nn.Conv2d(hidden_dims[-1], out_channels=3, kernel_size=3, padding=1),
                 nn.Tanh())

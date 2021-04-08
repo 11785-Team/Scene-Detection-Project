@@ -3,10 +3,11 @@ import torch.utils.data as data
 from beta_vae import BetaVAE
 import torch.optim as optim
 import os
+import numpy as np
 
 def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay, m,):
 
-    model_output_folder = '/content/gdrive/MyDrive/models_4_7_sleep/'
+    model_output_folder = '/content/gdrive/MyDrive/models_baseline_beta_1/'
     if not os.path.exists(model_output_folder):
         os.mkdir(model_output_folder)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -27,6 +28,8 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
     # save training loss and validation loss for KFold
     train_loss = []
     val_loss = []
+    train_recons_loss = []
+    train_kld_loss = []
 
     # Training
     for iter in range(max_iters):
@@ -58,27 +61,32 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
         print('Train: #{} epoch, the loss is {}, recons loss is {}, kld loss is {}'.format(iter, 
                                                         loss/batch_num, recons_loss/batch_num, kld_loss/batch_num))
         train_loss.append(loss / batch_num)
+        train_recons_loss.append(recons_loss / batch_num)
+        train_kld_loss.append(kld_loss / batch_num)
+        scheduler.step(loss/batch_num)
 
         # Validation
-        batch_num = 0
-        loss_val = 0
-        Model.eval()
-        with torch.no_grad():
-            for images in val_data_loader:
-                imgs = images.to(device)
-                output = Model.forward(imgs)
-                loss_val += Model.loss_function(output, M_N=batch_size)['loss'].item()
-                batch_num += 1
-                torch.cuda.empty_cache()
-                del imgs
+        # batch_num = 0
+        # loss_val = 0
+        # Model.eval()
+        # with torch.no_grad():
+        #     for images in val_data_loader:
+        #         imgs = images.to(device)
+        #         output = Model.forward(imgs)
+        #         loss_val += Model.loss_function(output, M_N=batch_size)['loss'].item()
+        #         batch_num += 1
+        #         torch.cuda.empty_cache()
+        #         del imgs
 
-        print('Val: #{} epoch, the loss is'.format(iter), loss_val / batch_num)
-        val_loss.append(loss_val / batch_num)
-        # save model for every 5 epoch to gdrive
-        scheduler.step(loss_val/batch_num)
-        # if iter % 5 == 4:
+        # print('Val: #{} epoch, the loss is'.format(iter), loss_val / batch_num)
+        # val_loss.append(loss_val / batch_num)
+
         output_model_path = os.path.join(model_output_folder, 'model_state_' + str(iter) + '_val_loss_' + str(loss_val/batch_num) + '.pkl')
         torch.save(Model.state_dict(), output_model_path)
+        if iter % 10 == 9:
+            loss_file = os.path.join(model_output_folder,'loss_iter_' + str(iter) + '.npy')
+            loss_record = {'total_loss':train_loss, 'recons_loss':train_recons_loss, 'kld_loss':train_kld_loss}
+            np.save(loss_file, loss_record)
     return Model.state_dict(), train_loss, val_loss
 
 
