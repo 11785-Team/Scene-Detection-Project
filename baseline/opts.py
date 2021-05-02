@@ -4,6 +4,7 @@ def get_opts():
     parser = argparse.ArgumentParser(description='11785_Project')
 
     parser.add_argument('--max_iters', type=int, default=100, help='the number of epochs for training')
+    parser.add_argument('--image_folder', type=str, default='/content/project/train_data/')
 
     # hyperparameters for optimizer
     parser.add_argument('--lr', type=float, default=0.1, help='the learning rate for training')
@@ -22,7 +23,7 @@ def get_opts():
     parser.add_argument('--Capacity_max_iter', type=int, default=1e5)
     parser.add_argument('--loss_type', type=str, default='H')
     parser.add_argument('--hidden_dims', type=list, default=[64, 128, 128, 256, 512, 512, 1024, 1024])
-
+    parser.add_argument('--output_folder', type=str, default='/content/gdrive/MyDrive/project_models/')
     opts = parser.parse_args()
 
     return opts

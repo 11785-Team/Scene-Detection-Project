@@ -14,10 +14,11 @@ from metric import *
 def main():
     opts = get_opts()
     # save filepath to one csv file
-    img_path = '/content/knnw_data/'
+    img_path = opts.image_folder
+    print("image folder:", img_path)
     csv_name = 'anime_data.csv'
     save2csv(path=img_path, csvname=csv_name)
-
+    
     # Can add some transform here
 
     # Define beta-vae net
@@ -42,7 +43,7 @@ def main():
         train_dataset = data.Subset(dataset, train_index)
         val_dataset = data.Subset(dataset, val_index)
         model_state, train_loss, val_loss = Train(Model, train_dataset, val_dataset, batch_size=opts.bs,
-                            max_iters=opts.max_iters, lr=opts.lr, w_decay=opts.w_decay, m=opts.m)
+                            max_iters=opts.max_iters, lr=opts.lr, w_decay=opts.w_decay, m=opts.m, output_folder = opts.output_folder)
         
         train_loss_sum += train_loss[-1]
         val_loss_sum += val_loss[-1]
@@ -53,6 +54,7 @@ def main():
     print('Average train loss:{:.4f}'.format(train_loss_sum / K))
     print('Average valid loss:{:.4f}'.format(val_loss_sum / K))
     
+
     torch.save(model_state, 'model_state.pkl')
     # use trained model to get the latent code of each frame
     # latent = generate_code(Model, model_state, dataset, opts.latent_dim)

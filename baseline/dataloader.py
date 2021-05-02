@@ -12,7 +12,7 @@ from opts import get_opts
 def save2csv(path, csvname='anime_data.csv'):
     # read imgname in dirt
     path_list = os.listdir(path)
-    path_list.sort(key=lambda x:int(x.split('frame_')[1].split('.jpeg')[0]))
+    path_list.sort(key=lambda x:int(x.split('frame_')[1].split('.png')[0]))
     # save img to csv
     if os.path.exists(csvname):
         os.remove(csvname) # delete file if exists
@@ -36,7 +36,7 @@ class Dataload(data.Dataset):
         self.csv_name = csv_name
         self.transform = transform
         self.path = imgpath + np.array(pd.read_csv(csv_name, header=None))
-
+        print("image path:", imgpath)
     def __getitem__(self, index):
 
         img = Image.open(self.path[index][0])

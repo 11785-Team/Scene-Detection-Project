@@ -18,7 +18,8 @@ class BetaVAE(BaseVAE):
         super(BetaVAE, self).__init__()
 
         self.latent_dim = latent_dim
-        self.beta = beta
+        self.beta = beta / 2
+        print('beta:', self.beta)
         self.gamma = gamma
         self.loss_type = loss_type
         self.C_max = torch.Tensor([max_capacity])
@@ -29,14 +30,17 @@ class BetaVAE(BaseVAE):
         hidden_dims = [32, 64, 128, 256] # overwrite hidden dims here for easier implementation
 
         # Build Encoder
+
+        # Build Encoder with mean pooling
         for h_dim in hidden_dims:
             print(in_channels, h_dim)
             modules.append(
                 nn.Sequential(
                     nn.Conv2d(in_channels, out_channels=h_dim,
-                            kernel_size=3, stride=2, padding=1),
+                            kernel_size=3, stride=1, padding=1),
                     # nn.BatchNorm2d(h_dim),
-                    nn.ReLU())
+                    nn.AvgPool2d(kernel_size=2),
+                    nn.LeakyReLU())
             )
             in_channels = h_dim
 
@@ -80,7 +84,8 @@ class BetaVAE(BaseVAE):
                 # nn.BatchNorm2d(hidden_dims[-1]),
                 nn.LeakyReLU(),
                 nn.Conv2d(hidden_dims[-1], out_channels=3, kernel_size=3, padding=1),
-                nn.Tanh())
+                # nn.Tanh()
+                )
 
     def encode(self, input):
         """
