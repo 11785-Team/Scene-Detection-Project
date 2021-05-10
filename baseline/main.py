@@ -14,46 +14,42 @@ from metric import *
 def main():
     opts = get_opts()
     # save filepath to one csv file
-    img_path = opts.image_folder
-    print("image folder:", img_path)
-    csv_name = 'anime_data.csv'
-    save2csv(path=img_path, csvname=csv_name)
+    train_path = opts.train_folder
+    val_path = opts.val_folder
+
+    print("train folder:", train_path)
+    print("val folder:", val_path)
+
+    train_csv_name = 'train_data.csv'
+    save2csv(path=train_path, csvname=train_csv_name)
+    val_csv_name = 'val_data.csv'
+    # save2csv(path=val_path, csvname=val_csv_name)
+    #csv_name = 'anime_data.csv'
+    #save2csv(path=img_path, csvname=csv_name)
     
     # Can add some transform here
 
     # Define beta-vae net
     print('latent dim:', opts.latent_dim)
     Model = BetaVAE(in_channels=3, latent_dim=opts.latent_dim, hidden_dims=opts.hidden_dims, beta=opts.beta,
-        gamma=opts.gamma, max_capacity=opts.max_capacity, Capacity_max_iter=opts.Capacity_max_iter, loss_type=opts.loss_type)
+        gamma=opts.gamma, max_capacity=opts.max_capacity, Capacity_max_iter=opts.Capacity_max_iter, loss_type=opts.loss_type, tau=opts.tau)
 
     # model_state_path = '/content/gdrive/MyDrive/models_baseline_beta_1/model_state_4_val_loss_443.9217264811198.pkl'
     # Model.load_state_dict(torch.load(model_state_path))
     # print("continue training with " + model_state_path)
 
     # KFold training
-    K = 5   # split data into K parts
-    dataset = Dataload(imgpath=img_path, csv_name=csv_name)
-    kf = KFold(n_splits=K, shuffle=False)
-    train_loss_sum, val_loss_sum = 0, 0
+    #K = 5   # split data into K parts
+    #dataset = Dataload(imgpath=img_path, csv_name=csv_name)
+    #kf = KFold(n_splits=K, shuffle=True)
+    #train_loss_sum, val_loss_sum = 0, 0
+    train_dataset = Dataload(imgpath=train_path, csv_name=train_csv_name)
     model_state = None
     print("Start Training!!!!!!!")
 
-
-    for train_index, val_index in kf.split(dataset):
-        train_dataset = data.Subset(dataset, train_index)
-        val_dataset = data.Subset(dataset, val_index)
-        model_state, train_loss, val_loss = Train(Model, train_dataset, val_dataset, batch_size=opts.bs,
-                            max_iters=opts.max_iters, lr=opts.lr, w_decay=opts.w_decay, m=opts.m, output_folder = opts.output_folder)
+    model_state, train_loss, val_loss = Train(Model, train_dataset, None, batch_size=opts.bs,
+    max_iters=opts.max_iters, lr=opts.lr, w_decay=opts.w_decay, m=opts.m, output_folder = opts.output_folder)
         
-        train_loss_sum += train_loss[-1]
-        val_loss_sum += val_loss[-1]
-
-
-
-    print('\n', '#'*10, 'KFold Result','#'*10)
-    print('Average train loss:{:.4f}'.format(train_loss_sum / K))
-    print('Average valid loss:{:.4f}'.format(val_loss_sum / K))
-    
 
     torch.save(model_state, 'model_state.pkl')
     # use trained model to get the latent code of each frame

@@ -9,21 +9,23 @@ class BetaVAE(BaseVAE):
     def __init__(self, in_channels: int,
                        latent_dim: int,
                        hidden_dims: list=None,
-                       beta: int = 4,
+                       beta: float = 4,
                        gamma: float = 1000,
                        max_capacity: int = 25,
                        Capacity_max_iter: int = 1e5,
                        loss_type: str = 'B',
+                       tau: float = 50.0,
                        **kwargs) -> None:
         super(BetaVAE, self).__init__()
 
         self.latent_dim = latent_dim
-        self.beta = beta / 2
+        self.beta = beta
         print('beta:', self.beta)
         self.gamma = gamma
         self.loss_type = loss_type
         self.C_max = torch.Tensor([max_capacity])
         self.C_stop_iter = Capacity_max_iter
+        self.tau = tau
 
         modules = []
         # if hidden_dims is None:
@@ -82,7 +84,7 @@ class BetaVAE(BaseVAE):
                                    padding=1,
                                    output_padding=1),
                 # nn.BatchNorm2d(hidden_dims[-1]),
-                nn.LeakyReLU(),
+                nn.ReLU(),
                 nn.Conv2d(hidden_dims[-1], out_channels=3, kernel_size=3, padding=1),
                 # nn.Tanh()
                 )
@@ -126,12 +128,21 @@ class BetaVAE(BaseVAE):
         eps = torch.randn_like(std)
 
         return eps * std + mu
-
+    '''
     def forward(self, input, **kwargs):
         mu, log_var = self.encode(input)
         z = self.reparameterize(mu, log_var)
 
         return [self.decode(z), input, mu, log_var]
+    '''
+    
+    def forward(self, input, **kwargs):
+        mu, log_var = self.encode(input)
+        z = self.reparameterize(mu, log_var)
+        z_decode = self.decode(z)
+        mu_new, log_var_new = self.encode(z_decode)
+        
+        return [z_decode, input, mu, log_var, mu_new, log_var_new]
 
     def loss_function(self, *args, **kwargs):
         self.num_iter += 1
@@ -139,18 +150,26 @@ class BetaVAE(BaseVAE):
         input_ = args[0][1]
         mu = args[0][2]
         log_var = args[0][3]
+        mu_new = args[0][4]
+        log_var_new = args[0][5]
+        
         kld_weight = kwargs['M_N']  # Account for the minibatch from the data
 
         recons_loss = F.mse_loss(recons, input_, reduction='sum').div(kld_weight)   # reconstruction error, straightforward
-
 
         # KL Divergence: Lb = Eq(z|x)[logP(x|z)] - Dkl(q(z|x) || p(z))
         # Hope to increase the lower bond. So maximize the first part and minimize the second part
         # Dkl(q(z|x) || p(z)) leads to minimize sum(mu**2 + exp(log_var) - (1 + log_var))
         kld_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim=1), dim=0)
+        
+        sd1 = log_var.exp()
+        sd2 = log_var_new.exp()
+        p = torch.distributions.Normal(mu, sd1)
+        q = torch.distributions.Normal(mu_new, sd2)
+        kld_loss_pq = torch.distributions.kl_divergence(p, q).mean()
 
         if self.loss_type == 'H':
-            loss = recons_loss + self.beta * kld_loss
+            loss = recons_loss + self.beta * kld_loss + self.tau * kld_loss_pq
         elif self.loss_type == 'B':   # set beta large first (if beta is large, the recons_loss will be largetoo.
                                       # and then slowly reduce it. Introduce value C to control the beta and slowly
                                       # increase C.
@@ -159,7 +178,7 @@ class BetaVAE(BaseVAE):
             loss = recons_loss + self.gamma * (kld_loss - C).abs()
         else:
             raise ValueError('Undefined loss type')
-        return {'loss': loss, "Reconstruction_loss": recons_loss, "KLD": kld_loss}
+        return {'loss': loss, "Reconstruction_loss": recons_loss, "KLD": kld_loss, "KLD_revise": kld_loss_pq}
 
     def sample(self, num_samples, current_device, **kwargs):
         """

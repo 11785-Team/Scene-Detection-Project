@@ -29,6 +29,7 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
     val_loss = []
     train_recons_loss = []
     train_kld_loss = []
+    train_kld_revise_loss = []
 
     # Training
     for iter in range(max_iters):
@@ -37,6 +38,7 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
         recons_loss = 0
         kld_loss = 0
         batch_num = 0
+        kld_revise_loss = 0
         for images in train_data_loader:
             imgs = images.to(device)
 
@@ -49,6 +51,7 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
             loss += loss_tmp['loss'].item()
             recons_loss += loss_tmp['Reconstruction_loss'].item()
             kld_loss += loss_tmp['KLD'].item()
+            kld_revise_loss += loss_tmp['KLD_revise'].item()
             # print('total:', loss_tmp['loss'].item(), 'kld loss:', loss_tmp['KLD'].item(), 'recons loss:', loss_tmp['Reconstruction_loss'].item())
             loss_tmp['loss'].backward()
             optimizer.step()
@@ -57,11 +60,12 @@ def Train(model, train_dataset, val_dataset, batch_size, max_iters, lr, w_decay,
             torch.cuda.empty_cache()
             del imgs
 
-        print('Train: #{} epoch, the loss is {}, recons loss is {}, kld loss is {}'.format(iter, 
-                                                        loss/batch_num, recons_loss/batch_num, kld_loss/batch_num))
+        print('Train: #{} epoch, the loss is {}, recons loss is {}, kld loss is {}, kld revise loss is {}'.format(iter, 
+                                                        loss/batch_num, recons_loss/batch_num, kld_loss/batch_num, kld_revise_loss/batch_num))
         train_loss.append(loss / batch_num)
         train_recons_loss.append(recons_loss / batch_num)
         train_kld_loss.append(kld_loss / batch_num)
+        train_kld_revise_loss.append(kld_revise_loss / batch_num)
         scheduler.step(loss/batch_num)
 
         # Validation

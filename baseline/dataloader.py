@@ -12,6 +12,12 @@ from opts import get_opts
 def save2csv(path, csvname='anime_data.csv'):
     # read imgname in dirt
     path_list = os.listdir(path)
+    '''
+    for i in range(len(path_list)):
+        print(path_list[i])
+        name = int(path_list[i].split('frame_')[1].split('.png')[0])
+        print(name)
+    '''
     path_list.sort(key=lambda x:int(x.split('frame_')[1].split('.png')[0]))
     # save img to csv
     if os.path.exists(csvname):
