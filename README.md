@@ -15,19 +15,19 @@ We use VAE as the baseline model. Although VAE may not seem anything related to 
 We use 142p as our dataset in the project. The source image size is 189×142, which will be re-scaled into 64×64.
 
 ### Architecture and Model
-Based on β-VAE architecture and introduce our innovation idea: reprojection loss. Create one VAE named "repro-VAE". refer to [Anand Krishnamoorthy, PyTorch-VAE, (2020), GitHub repository, https://github.com/AntixK/PyTorch-VAE/tree/master/models]
+Based on β-VAE architecture and introduce our innovation idea: reprojection loss. Create one VAE named "repro-VAE". refer to [*Anand Krishnamoorthy, PyTorch-VAE, (2020), GitHub repository, https://github.com/AntixK/PyTorch-VAE/tree/master/models*]
 
-Here is the architecture of our model  (refer to Hung-yi Lee’s lecture  https://www.youtube.com/watch?v=0CKeqXl5IY0&t=1650s)
+**Here is the architecture of our model**  (*refer to Hung-yi Lee’s lecture  https://www.youtube.com/watch?v=0CKeqXl5IY0&t=1650s*)
 
 ![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture.png)
 ![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/3D_architecture.png)
 
-Here is the visualization explanation of reprojection loss.
+**Here is the visualization explanation of reprojection loss.**
 
 ![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reprojection.png)
 ![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/latent_reprojection.png)
 
-Here is the detailed architecture
+**Here is the detailed architecture**
 
 ![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture_details.png)
 
@@ -44,14 +44,14 @@ Platform: Colab
 
 Opts.py stores all the hyperparameters that you can refer to. Here is the hyperparameters we are using to get the best performance:
 
-Do training:
+**Do training**:
 
 !python main.py --val_folder [Your validation dataset folder] --train_folder [Your training dataset folder] --bs 256  --hidden-dims [32, 64, 128, 256] --max_iters 100 --loss_type H --lr 0.0001 --latent_dim 10 --tau 200 --beta 4 --output_folder [Your result folder]
 
-Do inference:
+**Do inference**:
 
 !python inference.py --beta 4 --latent_dim 10 --bs 256 --span 1 --image_folder [Your validation dataset folder]  --model_folder [Your model_state folder]
 
-Get Acc:
+**Get Acc**:
 
 !python pure_test.py --labels [Your labels file] --dictionary [Your result npy folder]
