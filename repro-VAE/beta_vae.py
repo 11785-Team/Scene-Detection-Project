@@ -28,8 +28,8 @@ class BetaVAE(BaseVAE):
         self.tau = tau
 
         modules = []
-        # if hidden_dims is None:
-        hidden_dims = [32, 64, 128, 256] # overwrite hidden dims here for easier implementation
+        if hidden_dims is None:
+            hidden_dims = [32, 64, 128, 256]
 
         # Build Encoder
 
@@ -72,8 +72,6 @@ class BetaVAE(BaseVAE):
                     nn.ReLU())
             )
           
-
-
         self.decoder = nn.Sequential(*modules)
 
         self.final_layer = nn.Sequential(
