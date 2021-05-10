@@ -14,6 +14,12 @@ We use VAE as the baseline model. Although VAE may not seem anything related to 
 
 We use 142p as our dataset in the project. The source image size is 189×142, which will be re-scaled into 64×64.
 
+### Defination of Scene Change
+
+We define scene change as there exists a scene change in the image, like the whole background changes from forest to city, or from home to classroom. Or a great change of POV. The main character or certain objects change doesn't lead to a scene change. Here is a example.
+
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/Scene_change_exp.png" alt=""></center>
+
 ### Architecture and Model
 Based on β-VAE architecture and introduce our innovation idea: reprojection loss. Create one VAE named "repro-VAE". refer to [*Anand Krishnamoorthy, PyTorch-VAE, (2020), GitHub repository, https://github.com/AntixK/PyTorch-VAE/tree/master/models*]
 
