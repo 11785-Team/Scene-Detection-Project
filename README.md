@@ -24,27 +24,27 @@ Based on β-VAE architecture and introduce our innovation idea: reprojection los
 
 **Here is the visualization explanation of reprojection loss.**
 
-<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reprojection.png" alt=""></center>
-<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/latent_reprojection.png" alt=""></center>
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reprojection.png" alt=""></center></div>
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/latent_reprojection.png" alt="" width="1032px", height="360px"></center></div>
 
 **Here is the detailed architecture**
 
-<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture_details.png" alt=""></center>
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture_details.png" alt=""></center></div>
 
 ### Results
 This is one example of reconstruction images. Because what we want is to detect the scene change instead of reconstruction images, the image quality is not very good but we can still tell the basic frame.
 
-<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reconstruction.png" alt=""></center>
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reconstruction.png" alt=""></center></div>
 
 These are the evluation of our baseline model and repro-VAE model about the accuracy of scene change detection
 
 **Baseline model**
 
-<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/baseline_result.png" alt=""></center>
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/baseline_result.png" alt="" width="800px", height="200px"></center></div>
 
 **Repro-VAE model**
 
-<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/model_result.png" alt=""></center>
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/model_result.png" alt="" width="800px", height="200px"></center></div>
 
 As far as we can see, our repro-VAE has promising increase in the accuracy compared with the baseline VAE model. Its further potential needs exploration.
 
