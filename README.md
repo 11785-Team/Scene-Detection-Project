@@ -10,7 +10,7 @@ We use VAE as the baseline model. Although VAE may not seem anything related to 
 
 ### Dataset Your Name (Kimi no Na wa)
 
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/example_images.png)
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/example_images.png" alt=""></center>
 
 We use 142p as our dataset in the project. The source image size is 189×142, which will be re-scaled into 64×64.
 
@@ -19,22 +19,34 @@ Based on β-VAE architecture and introduce our innovation idea: reprojection los
 
 **Here is the architecture of our model**  (*refer to Hung-yi Lee’s lecture  https://www.youtube.com/watch?v=0CKeqXl5IY0&t=1650s*)
 
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture.png)
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/3D_architecture.png)
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture.png" alt=""></center>
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/3D_architecture.png" alt=""></center>
 
 **Here is the visualization explanation of reprojection loss.**
 
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reprojection.png)
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/latent_reprojection.png)
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reprojection.png" alt=""></center>
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/latent_reprojection.png" alt=""></center>
 
 **Here is the detailed architecture**
 
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture_details.png)
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/architecture_details.png" alt=""></center>
 
 ### Results
 This is one example of reconstruction images. Because what we want is to detect the scene change instead of reconstruction images, the image quality is not very good but we can still tell the basic frame.
 
-![image](https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reconstruction.png)
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/reconstruction.png" alt=""></center>
+
+These are the evluation of our baseline model and repro-VAE model about the accuracy of scene change detection
+
+**Baseline model**
+
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/baseline_result.png" alt=""></center>
+
+**Repro-VAE model**
+
+<center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/model_result.png" alt=""></center>
+
+As far as we can see, our repro-VAE has promising increase in the accuracy compared with the baseline VAE model. Its further potential needs exploration.
 
 ### Video presentation
 Youtube link: https://www.youtube.com/watch?v=8YoGIvvyqGs&list=PLp-0K3kfddPw7yEP_cICv9Glt237KNpSx&index=17
@@ -46,12 +58,12 @@ Opts.py stores all the hyperparameters that you can refer to. Here is the hyperp
 
 **Do training**:
 
-!python main.py --val_folder [Your validation dataset folder] --train_folder [Your training dataset folder] --bs 256  --hidden-dims [32, 64, 128, 256] --max_iters 100 --loss_type H --lr 0.0001 --latent_dim 10 --tau 200 --beta 4 --output_folder [Your result folder]
+    !python main.py --val_folder [Your validation dataset folder] --train_folder [Your training dataset folder] --bs 256  --hidden-dims [32, 64, 128, 256] --max_iters 100 --loss_type H --lr 0.0001 --latent_dim 10 --tau 200 --beta 4 --output_folder [Your result folder]
 
 **Do inference**:
 
-!python inference.py --beta 4 --latent_dim 10 --bs 256 --span 1 --image_folder [Your validation dataset folder]  --model_folder [Your model_state folder]
+    !python inference.py --beta 4 --latent_dim 10 --bs 256 --span 1 --image_folder [Your validation dataset folder]  --model_folder [Your model_state folder]
 
 **Get Acc**:
 
-!python pure_test.py --labels [Your labels file] --dictionary [Your result npy folder]
+    !python pure_test.py --labels [Your labels file] --dictionary [Your result npy folder]
