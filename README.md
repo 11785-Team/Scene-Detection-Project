@@ -44,6 +44,32 @@ This is one example of reconstruction images. Because what we want is to detect 
 
 These are the evluation of our baseline model and repro-VAE model about the accuracy of scene change detection
 
+To be clear, we also visualize the latent space by using t-SNE. Here is the illustration.
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/TSNE-latentspcae.png" alt=""></center></div>
+
+As we can see, the consective images without scene changes are clustered into separate groups.
+
+**Here are some visualizaiton of scene change detection**
+
+**True Positive**
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/True_Positive.png" alt=""></center></div>
+
+**Dynamic changes-False Negative**
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/dynamic_change.png" alt=""></center></div>
+
+**True Negative**
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/True_Negative.png" alt=""></center></div>
+
+**False Postive
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/False_Positive.png" alt=""></center></div>
+
+
+
 **Baseline model**
 
 <div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/baseline_result.png" alt="" width="800px", height="200px"></center></div>
