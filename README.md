@@ -44,6 +44,16 @@ This is one example of reconstruction images. Because what we want is to detect 
 
 These are the evluation of our baseline model and repro-VAE model about the accuracy of scene change detection
 
+**Baseline model**
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/baseline_result.png" alt="" width="800px", height="200px"></center></div>
+
+**Repro-VAE model**
+
+<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/model_result.png" alt="" width="800px", height="200px"></center></div>
+
+As far as we can see, our repro-VAE has promising increase in the accuracy compared with the baseline VAE model. Its further potential needs exploration.
+
 To be clear, we also visualize the latent space by using t-SNE. Here is the illustration.
 
 <div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/TSNE-latentspcae.png" alt=""></center></div>
@@ -64,21 +74,10 @@ As we can see, the consective images without scene changes are clustered into se
 
 <div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/True_Negative.png" alt=""></center></div>
 
-**False Postive
+**False Postive**
 
 <div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/False_Positive.png" alt=""></center></div>
 
-
-
-**Baseline model**
-
-<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/baseline_result.png" alt="" width="800px", height="200px"></center></div>
-
-**Repro-VAE model**
-
-<div  align="center"><center><img src="https://github.com/11785-Team/Scene-Detection-Project/blob/master/images/model_result.png" alt="" width="800px", height="200px"></center></div>
-
-As far as we can see, our repro-VAE has promising increase in the accuracy compared with the baseline VAE model. Its further potential needs exploration.
 
 ### Video presentation
 Youtube link: https://www.youtube.com/watch?v=8YoGIvvyqGs&list=PLp-0K3kfddPw7yEP_cICv9Glt237KNpSx&index=17
